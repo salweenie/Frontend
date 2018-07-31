@@ -9,6 +9,13 @@ class Login extends Component {
   }
   render(){
     return (<Layout>
+      <div className="row">
+        <div className="col">
+          <h1 className="heading">Please Login</h1>
+        </div>
+      </div>
+
+      
       <form onSubmit={this.submitForm}>
       <div className="form-group">
         <label htmlFor="exampleInputEmail1">Email address</label>
