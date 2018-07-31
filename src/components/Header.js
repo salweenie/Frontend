@@ -8,7 +8,7 @@ class Header extends Component {
           <NavLink className="nav-link" activeClassName="active" to={'/about'}>About</NavLink>
         </li>
         <li className="nav-item">
-          <NavLink className="nav-link" activeClassName="active" to={'/users'}>Dashboard</NavLink>
+          <NavLink className="nav-link" activeClassName="active" to={'/users/'}>Dashboard</NavLink>
         </li>
       </ul>
     </nav>
