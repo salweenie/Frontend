@@ -1,3 +1,5 @@
+import { getToken } from "./authentication";
+
 function loginRequest({email, password}){
   return new Promise((resolve, reject) => {
     fetch("http://localhost:5000/users/login", {
@@ -19,6 +21,26 @@ function loginRequest({email, password}){
     }).catch(e => reject(e))
   });
 }
+
+function getDashboard(){
+  return new Promise((resolve, reject) => {
+    fetch("http://localhost:5000/dashboard", {
+      headers: {
+       'Authorization': getToken() 
+      }
+    }).then(response => {
+      if (!response.ok){
+        reject(new Error("Unathorized"));
+        return;
+      }
+      response.json().then(json => {
+        resolve(json.data);
+      }).catch(e => reject(e));
+    }).catch(err => reject(err))
+  })
+}
+
 export {
-  loginRequest
+  loginRequest,
+  getDashboard
 }

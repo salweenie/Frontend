@@ -1,43 +1,64 @@
 import React, { Component } from 'react';
 import './dashboard.css';
 import Layout from '../../components/Layout';
+import { Redirect } from 'react-router-dom';
+import { getDashboard } from '../../helpers/network';
+import { userLogout } from '../../helpers/authentication';
 
+const Row = (props) => {
+  return <tr>
+    <th scope="row">{props.row.name}</th>
+    <td>{props.row.profession}</td>
+    <td>{props.row.location}</td>
+  </tr>
+}
+const Loading = (props) => {
+  return <div className="alert alert-info" role="alert">
+    Logging In Please Wait
+  </div>
+}
+const Table = (props) => {
+  return <div>
+    <table className="table">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Profession</th>
+          <th scope="col">Location</th>
+        </tr>
+      </thead>
+      <tbody>
+        {props.data ? props.data.map(row => <Row key={row.name} row={row} />) : null}
+      </tbody>
+    </table>
+  </div>
+}
 class Dashboard extends Component {
+  state = {
+    authenticated: false,
+    data: null,
+    error: false
+  }
+  async componentDidMount(){
+    try {
+      const response = await getDashboard();
+      this.setState({
+        data: response,
+        authenticated: true
+      });
+    }catch(e){
+      userLogout();
+      this.setState({
+        error: true,
+        authenticated: false
+      })
+    }
+  }
   render() {
     return (
       <Layout>
-      <div>
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">First</th>
-              <th scope="col">Last</th>
-              <th scope="col">Handle</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-              <td>@twitter</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        {this.state.authenticated === false && this.state.error === true ? <Redirect to="/users/login" /> : null}
+        {this.state.authenticated === false && this.state.error === false ? <Loading /> : <Table data={this.state.data}/>}
       </Layout>
     );
   }

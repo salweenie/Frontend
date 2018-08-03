@@ -4,6 +4,7 @@ import { userLogout, isLoggedIn, userInfo } from '../helpers/authentication';
 class Header extends Component {
   logout = (e) => {
     userLogout();
+    window.location.href = "/";
   }
 
   render(){
